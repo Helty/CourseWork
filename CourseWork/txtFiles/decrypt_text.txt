@@ -1,0 +1,3 @@
+TRID INS INT
+qwertyQWERTY
+ThisIsPerm
