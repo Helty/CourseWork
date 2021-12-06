@@ -3,18 +3,20 @@
 #include <fstream> 
 #include <iostream>
 
+using namespace std;
+using DataArray = vector<string>;
+
 #pragma once
 class WorkWithTXT
 {
 public:
-	static std::vector<std::string> GetVectorKeyPermutationFromTXT();
-	static std::vector<std::string> GetVectorKeyVigenereFromTXT();
-	static std::vector<std::string> GetVectorEncryptTextFromTXT();
-	static std::vector<std::string> GetVectorDecryptTextFromTXT();
 
-	static bool setPermutationKeyToTXT(std::string);
-	static bool setEncryptTextToTXT(std::string);
-	static bool setDecryptTextToTXT(std::string);
-	static bool setVigenereKeyToTXT(std::string);
+	inline static const string decryptTextFile = "D:\\Проекты Visual Studio\\CourseWork\\CourseWork\\decrypt_text.txt";
+	inline static const string encryptTextFile = "D:\\Проекты Visual Studio\\CourseWork\\CourseWork\\txtFiles\\encrypt_text.txt";
+	inline static const string permutationKeyFile = "D:\\Проекты Visual Studio\\CourseWork\\CourseWork\\txtFiles\\permutation_keys.txt";
+	inline static const string vigenereKeyFile = "D:\\Проекты Visual Studio\\CourseWork\\CourseWork\\txtFiles\\vigenere_keys.txt";
+
+	static DataArray GetDataArrayFromTxt(std::string const& filePath);
+	static void SetTextToTxt(std::string const& text, std::string filePath);
 };
 

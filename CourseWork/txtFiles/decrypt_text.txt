@@ -1,3 +1,2 @@
-TRID INS INT
-qwertyQWERTY
-ThisIsPerm
+text to encrypt
+TeXt ToEnCrYpT

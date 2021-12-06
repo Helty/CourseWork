@@ -7,7 +7,7 @@ class Permutation
 {
 private:
 	vector<int> m_key;
-	vector<int> _StringToVectorIntTranslation(string);
+	vector<int> StringToVectorIntTranslation(string);
 
 public:
 	void SetKey(vector<int> key);

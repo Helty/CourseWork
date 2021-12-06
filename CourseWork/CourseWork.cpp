@@ -1,158 +1,107 @@
 ﻿#include <iostream>
-#include <cassert>
 #include "Windows.h"
 #include "WorkWithTXT.h"
 #include "Vigenere.h"
 #include "Permutation.h"
 #include "Menu.h"
-
 using namespace std;
-
 int main()
 {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
-    Menu menu;
-    int variant;
-
+    Menu::MainMenuItem choice;
+    Menu::MenuCryptChoise choiceCrypt;
     do
     {
-        WorkWithTXT workWithTXT;
-        menu.PrintMenu();
-        variant = menu.GetVariant();
+        Menu::PrintMainMenu();
+        Menu::GetChoice(choice);
 
-        if (variant == 1)
-        {
-            menu.PrintMenuTextToCrypt();
-            int variantCrypt = menu.GetVariantCrypt();
-
-            if (variantCrypt == 1)
-            {
-                //Объявить экземпляр класса.
+        if (choice == Menu::MainMenuItem::ENCRYPT_TEXT){
+            Menu::PrintMenuCryptChoise();
+            Menu::GetChoiceCrypt(choiceCrypt);
+            if (choiceCrypt == Menu::MenuCryptChoise::PERMUTATION) {
                 Permutation permutation;
-
-                //попросите пользователя ввести текст для шифрования.
-
-                string textDecrypt = menu.GetTextFromUser();
-
-                //попросите ввести ключ для шифрования или взять из уже существующих из файла key.txt
-
-                string key = menu.GetKeyFromUser();
-
+                string textDecrypt = Menu::GetTextFromUser();
+                string key = Menu::GetKeyFromUser();
                 permutation.SetKey(key);
-
-                //зашифровать методом text_encrypt = doublePermutation.encrypt(text,key)
-
                 string textEncrypt = permutation.Encrypt(textDecrypt);
-
-                //всю информацию записать в txt файлы.
-                assert(workWithTXT.setPermutationKeyToTXT(key) == true);
-                assert(workWithTXT.setEncryptTextToTXT(textEncrypt) == true);
-                assert(workWithTXT.setDecryptTextToTXT(textDecrypt) == true);
+                try {
+                    WorkWithTXT::SetTextToTxt(key, WorkWithTXT::permutationKeyFile);
+                    WorkWithTXT::SetTextToTxt(textEncrypt, WorkWithTXT::encryptTextFile);
+                    WorkWithTXT::SetTextToTxt(textDecrypt, WorkWithTXT::decryptTextFile);
+                }
+                catch (const std::exception& error)
+                {
+                    cerr << error.what() << endl;
+                }
             }
-            else if (variantCrypt == 2)
-            {
-                //создать экземпляр класса шифра виженера.
+            else if (choiceCrypt == Menu::MenuCryptChoise::VIGENERE) {
                 Vigenere vigenere;
-
-                //попросите пользователя ввести текст для шифрования.
-
-                string textDecrypt = menu.GetTextFromUser();
-
-                //попросите ввести ключ для шифрования
-
-                string key = menu.GetKeyFromUser();
-
+                string textDecrypt = Menu::GetTextFromUser();
+                string key = Menu::GetKeyFromUser();
                 vigenere.SetKey(key);
-
-                //зашифровать методом text_encrypt = vigenere.encrypt(text) и результат сохранить в text_encrypt.txt
-
                 string textEncrypt = vigenere.Encrypt(textDecrypt);
 
-                //всю информацию записать в txt файлы.
-                assert(workWithTXT.setVigenereKeyToTXT(key) == true);
-                assert(workWithTXT.setDecryptTextToTXT(textDecrypt) == true);
-                assert(workWithTXT.setEncryptTextToTXT(textEncrypt) == true);
+                try {
+                    WorkWithTXT::SetTextToTxt(key, WorkWithTXT::vigenereKeyFile);
+                    WorkWithTXT::SetTextToTxt(textEncrypt, WorkWithTXT::encryptTextFile);
+                    WorkWithTXT::SetTextToTxt(textDecrypt, WorkWithTXT::decryptTextFile);
+                }
+                catch (const std::exception& error)
+                {
+                    cerr << error.what() << endl;
+                }
             }
-            else if (variantCrypt == 3)
-            {
+            else if (choiceCrypt == Menu::MenuCryptChoise::EXIT) {
                 continue;
             }
         }
-        else if (variant == 2) {
-
-            //здесь должна быть логика расшифровки
-
-            //создаём два экземпляра классов (permutation и vigenere)
+        else if (choice == Menu::MainMenuItem::DECRYPT_TEXT) {
             system("cls");
             Vigenere vigenere;
-            Permutation permutation;
-
-            //Пройтись по всем зашифрованным текстам в encrypt_text.txt
-            
-            for (auto encryptText : workWithTXT.GetVectorEncryptTextFromTXT())
-            {
-                for (auto permutationKey : workWithTXT.GetVectorKeyPermutationFromTXT())
-                {
+            Permutation permutation;            
+            for (auto encryptText : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::encryptTextFile)) {
+                for (auto permutationKey : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::permutationKeyFile)) {
                     permutation.SetKey(permutationKey);
-
                     string decryptText = permutation.Decrypt(encryptText);
-
-                    for (auto decryptTextTXT : workWithTXT.GetVectorDecryptTextFromTXT())
-                    {
-                        if (decryptText == decryptTextTXT)
-                        {
+                    for (auto decryptTextTXT : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::decryptTextFile)) {
+                        if (decryptText == decryptTextTXT) {
                             cout << "Есть совпадение: " << endl;
                             cout << "Зашифрованный текст: " << encryptText << endl;
                             cout << "Расшифрованный текст: " << decryptText << endl;
                             cout << "Ключ: " << permutationKey << endl;
                             cout << "Тип шифрования: перестановка." << endl << endl;
-                            goto nextEncryptText;
+                            break;
                         }
-                        else
-                        {
+                        else {
                             continue;
                         }
                     }
                 }
-
-                for (auto vigenereKey : workWithTXT.GetVectorKeyVigenereFromTXT())
-                {
+                for (auto vigenereKey : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::vigenereKeyFile)) {
                     vigenere.SetKey(vigenereKey);
-
                     string decryptText = vigenere.Decrypt(encryptText);
-
-                    for (auto decryptTextTXT : workWithTXT.GetVectorDecryptTextFromTXT())
-                    {
-                        if (decryptText == decryptTextTXT)
-                        {
+                    for (auto decryptTextTXT : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::decryptTextFile)) {
+                        if (decryptText == decryptTextTXT) {
                             cout << "Есть совпадение: " << endl;
                             cout << "Зашифрованный текст: " << encryptText << endl;
                             cout << "Расшифрованный текст: " << decryptText << endl;
                             cout << "Ключ: " << vigenereKey << endl;
                             cout << "Тип шифрования: Виженер." << endl << endl;
-                            goto nextEncryptText;
-
-
+                            break;
                         }
-                        else
+                        else 
                         {
                             continue;
                         }
                     }
                 }
-
-            nextEncryptText:
-                continue;
             }
             system("PAUSE");
         }
-        else if (variant == 3)
-        {
-            continue;
+        else if (choice == Menu::MainMenuItem::EXIT) {
+            break;
         }
-
-    } while (variant != 3);
-
+    } while (TRUE);
 }

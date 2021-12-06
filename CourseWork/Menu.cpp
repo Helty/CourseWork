@@ -2,34 +2,24 @@
 
 namespace
 {
-    bool isRus(unsigned char letter)
-    {
+    bool isRus(unsigned char letter){
         return ((letter >= 192 && letter <= 255) || letter == 168 || letter == 184) ? true : false;
     }
 }
 
-int Menu::GetVariant()
+void Menu::GetChoice(MainMenuItem& choice)
 {
-    int variant = 1;
-    string str; // строка для считывания введённых данных
-    getline(cin, str); // считываем строку
+    string userChoice;
+    getline(cin, userChoice);
+    if (!userChoice.empty()) choice = (MainMenuItem)(stoi(userChoice));
 
-    if (!str.empty()) {
-        variant = stoi(str);
+    while (choice != MainMenuItem::ENCRYPT_TEXT and choice != MainMenuItem::DECRYPT_TEXT and choice != MainMenuItem::EXIT) {
+        cout << "Не правильный ввод. Попробуйте снова: ";
+        getline(cin, userChoice);
+        choice = (MainMenuItem)(stoi(userChoice));
     }
-
-    // пока ввод некорректен, сообщаем об этом и просим повторить его
-    while (variant < 1 or variant > 6)
-    {
-        cout << "Не правильный ввод. Попробуйте снова: "; // выводим сообщение об ошибке
-        getline(cin, str); // считываем строку повторно
-        variant = stoi(str);
-    }
-
-    return variant;
 }
-
-void Menu::PrintMenu()
+void Menu::PrintMainMenu()
 {
     system("cls"); // очищаем экран
     cout << "Что вы хотите сделать?" << endl;
@@ -37,34 +27,27 @@ void Menu::PrintMenu()
     cout << "2. Расшифровать текст." << endl;
     cout << "3. Выход из программы." << endl;
 }
-
-void Menu::PrintMenuTextToCrypt()
+void Menu::PrintMenuCryptChoise()
 {
     system("cls");
     cout << "Каким способом шифровать?" << endl;
     cout << "1. Двойная перестановка." << endl;
     cout << "2. Шифр Виженера." << endl;
-    cout << "3. Выход из программы." << endl;
+    cout << "3. Выйти в главное меню." << endl;
 }
-
-string Menu::GetTextFromUser()
-{
+string Menu::GetTextFromUser(){
     system("cls");
     string textFromUser;
     cout << "Введите текст для шифрования: ";
     getline(cin, textFromUser);
-
-    while (isRus(textFromUser[0]))
-    {
+    while (isRus(textFromUser[0]))    {
         system("cls");
         cout << "Вводите латиницу! Введите текст для шифрования: ";
         getline(cin, textFromUser);
     }
     return textFromUser;
 }
-
-std::string Menu::GetKeyFromUser()
-{
+std::string Menu::GetKeyFromUser(){
     system("cls");
     string key;
     cout << "Введите ключ для шифрования: ";
@@ -76,20 +59,15 @@ std::string Menu::GetKeyFromUser()
     }
     return key;
 }
-
-int Menu::GetVariantCrypt()
+void Menu::GetChoiceCrypt(MenuCryptChoise& choiceCrypt)
 {
-    int variantCrypt; // строка для считывания введённых данных
-    string str;
-    getline(cin, str); // считываем строку
-    variantCrypt = stoi(str);
-
-    while (variantCrypt != 1 and variantCrypt != 2 and variantCrypt != 3)
+    string userChoiceCrypt;
+    getline(cin, userChoiceCrypt);
+    choiceCrypt = (MenuCryptChoise)(stoi(userChoiceCrypt));
+    while (choiceCrypt != MenuCryptChoise::PERMUTATION and choiceCrypt != MenuCryptChoise::VIGENERE and choiceCrypt != MenuCryptChoise::EXIT)
     {
-        cout << "Не правильный ввод. Попробуйте снова: "; // выводим сообщение об ошибке
-        getline(cin, str); // считываем строку повторно
-        variantCrypt = stoi(str);
+        cout << "Не правильный ввод. Попробуйте снова: ";
+        getline(cin, userChoiceCrypt);
+        choiceCrypt = (MenuCryptChoise)(stoi(userChoiceCrypt));
     }
-
-    return variantCrypt;
 }
