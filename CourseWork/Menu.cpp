@@ -6,13 +6,11 @@ namespace
         return ((letter >= 192 && letter <= 255) || letter == 168 || letter == 184) ? true : false;
     }
 }
-
 void Menu::GetChoice(MainMenuItem& choice)
 {
     string userChoice;
     getline(cin, userChoice);
     if (!userChoice.empty()) choice = (MainMenuItem)(stoi(userChoice));
-
     while (choice != MainMenuItem::ENCRYPT_TEXT and choice != MainMenuItem::DECRYPT_TEXT and choice != MainMenuItem::EXIT) {
         cout << "Не правильный ввод. Попробуйте снова: ";
         getline(cin, userChoice);
@@ -31,7 +29,7 @@ void Menu::PrintMenuCryptChoise()
 {
     system("cls");
     cout << "Каким способом шифровать?" << endl;
-    cout << "1. Двойная перестановка." << endl;
+    cout << "1. Перестановка." << endl;
     cout << "2. Шифр Виженера." << endl;
     cout << "3. Выйти в главное меню." << endl;
 }

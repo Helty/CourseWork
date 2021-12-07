@@ -5,7 +5,6 @@ using namespace std;
 #pragma once
 class Menu
 {
-
 public:
 	enum class MainMenuItem : int
 	{
@@ -19,13 +18,10 @@ public:
 		VIGENERE,
 		EXIT,
 	};
-
 	static void GetChoice(MainMenuItem& menuItem);
 	static void GetChoiceCrypt(MenuCryptChoise& choiceCrypt);
-
 	static void PrintMainMenu();
 	static void PrintMenuCryptChoise();
-
 	static std::string GetTextFromUser();
 	static std::string GetKeyFromUser();
 };

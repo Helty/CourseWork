@@ -11,7 +11,7 @@ class WorkWithTXT
 {
 public:
 
-	inline static const string decryptTextFile = "D:\\Проекты Visual Studio\\CourseWork\\CourseWork\\decrypt_text.txt";
+	inline static const string decryptTextFile = "D:\\Проекты Visual Studio\\CourseWork\\CourseWork\\txtFiles\\decrypt_text.txt";
 	inline static const string encryptTextFile = "D:\\Проекты Visual Studio\\CourseWork\\CourseWork\\txtFiles\\encrypt_text.txt";
 	inline static const string permutationKeyFile = "D:\\Проекты Visual Studio\\CourseWork\\CourseWork\\txtFiles\\permutation_keys.txt";
 	inline static const string vigenereKeyFile = "D:\\Проекты Visual Studio\\CourseWork\\CourseWork\\txtFiles\\vigenere_keys.txt";

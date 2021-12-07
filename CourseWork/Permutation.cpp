@@ -6,11 +6,9 @@ void Permutation::SetKey(vector<int> key){
         this->m_key[i] = key[i];
     }
 }
-
 void Permutation::SetKey(string key){
     Permutation::SetKey(StringToVectorIntTranslation(key));
 }
-
 vector<int> Permutation::StringToVectorIntTranslation(string key){
     std::vector<int> result;
     for (int i = 0; i < key.size(); i++)    {
@@ -18,12 +16,8 @@ vector<int> Permutation::StringToVectorIntTranslation(string key){
     }
     return result;
 }
-
 string Permutation::Encrypt(string textEncrypt){
-    if (textEncrypt == "") return "";
-    for (int i = 0; i < textEncrypt.length() % m_key.size(); i++) {
-        textEncrypt += textEncrypt[i];
-    }
+    if (textEncrypt == "" or (textEncrypt.length() % m_key.size() != 0)) return "";
     std::string result = "";
     for (int i = 0; i < textEncrypt.length(); i += (int)m_key.size()) {
         std::vector<char> transposition;
@@ -37,9 +31,8 @@ string Permutation::Encrypt(string textEncrypt){
     }
     return result;
 }
-
 string Permutation::Decrypt(string textDecrypt){
-    if (textDecrypt == "") return "";
+    if (textDecrypt == "" or (textDecrypt.length() % m_key.size() != 0)) return "";
     string result = "";
     for (int i = 0; i < textDecrypt.length(); i += (int)m_key.size()) {
         std::vector<char> transposition;

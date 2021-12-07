@@ -5,6 +5,51 @@
 #include "Permutation.h"
 #include "Menu.h"
 using namespace std;
+
+bool PermutationSearch(string encryptText, Permutation permutation)
+{
+    for (auto permutationKey : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::permutationKeyFile)) {
+        permutation.SetKey(permutationKey);
+        string decryptText = permutation.Decrypt(encryptText);
+        for (auto decryptTextTXT : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::decryptTextFile)) {
+            if (decryptText == decryptTextTXT) {
+                cout << "Есть совпадение: " << endl;
+                cout << "Зашифрованный текст: " << encryptText << endl;
+                cout << "Расшифрованный текст: " << decryptText << endl;
+                cout << "Ключ: " << permutationKey << endl;
+                cout << "Тип шифрования: перестановка." << endl << endl;
+                return true;
+            }
+            else {
+                continue;
+            }
+        }
+    }
+    return false;
+}
+
+bool VigenereSearch(string encryptText, Vigenere vigenere)
+{
+    for (auto vigenereKey : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::vigenereKeyFile)) {
+        vigenere.SetKey(vigenereKey);
+        string decryptText = vigenere.Decrypt(encryptText);
+        for (auto decryptTextTXT : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::decryptTextFile)) {
+            if (decryptText == decryptTextTXT) {
+                cout << "Есть совпадение: " << endl;
+                cout << "Зашифрованный текст: " << encryptText << endl;
+                cout << "Расшифрованный текст: " << decryptText << endl;
+                cout << "Ключ: " << vigenereKey << endl;
+                cout << "Тип шифрования: Виженер." << endl << endl;
+                return true;
+            }
+            else {
+                continue;
+            }
+        }
+    }
+    return false;
+}
+
 int main()
 {
     SetConsoleCP(1251);
@@ -62,41 +107,8 @@ int main()
             Vigenere vigenere;
             Permutation permutation;            
             for (auto encryptText : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::encryptTextFile)) {
-                for (auto permutationKey : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::permutationKeyFile)) {
-                    permutation.SetKey(permutationKey);
-                    string decryptText = permutation.Decrypt(encryptText);
-                    for (auto decryptTextTXT : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::decryptTextFile)) {
-                        if (decryptText == decryptTextTXT) {
-                            cout << "Есть совпадение: " << endl;
-                            cout << "Зашифрованный текст: " << encryptText << endl;
-                            cout << "Расшифрованный текст: " << decryptText << endl;
-                            cout << "Ключ: " << permutationKey << endl;
-                            cout << "Тип шифрования: перестановка." << endl << endl;
-                            break;
-                        }
-                        else {
-                            continue;
-                        }
-                    }
-                }
-                for (auto vigenereKey : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::vigenereKeyFile)) {
-                    vigenere.SetKey(vigenereKey);
-                    string decryptText = vigenere.Decrypt(encryptText);
-                    for (auto decryptTextTXT : WorkWithTXT::GetDataArrayFromTxt(WorkWithTXT::decryptTextFile)) {
-                        if (decryptText == decryptTextTXT) {
-                            cout << "Есть совпадение: " << endl;
-                            cout << "Зашифрованный текст: " << encryptText << endl;
-                            cout << "Расшифрованный текст: " << decryptText << endl;
-                            cout << "Ключ: " << vigenereKey << endl;
-                            cout << "Тип шифрования: Виженер." << endl << endl;
-                            break;
-                        }
-                        else 
-                        {
-                            continue;
-                        }
-                    }
-                }
+                if (PermutationSearch(encryptText, permutation)) continue;            
+                if (VigenereSearch(encryptText, vigenere)) continue;                
             }
             system("PAUSE");
         }
